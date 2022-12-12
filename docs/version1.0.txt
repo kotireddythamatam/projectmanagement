@@ -1,4 +1,68 @@
-Project Management Version1.0:
-	- Project management is applicable for any industry which need to keep track of their company, projects and user management.
-	- It has company details like their address, motive of work, what they do etc.
-	-
+BaseModel: table structure
+	- name = models.CharField(max_length=255)
+	- description = models.TextField()
+	- deleted_at = models.DateTimeField(blank=True)
+	- created_at = models.DateTimeField(auto_now_add=True)
+	- updated_at = models.DateTimeField(auto_add=True)
+	- created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="%(class)_%(model)", on_delete=models.DO_NOTHING)
+	- updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="%(class)_%(model)", on_delete=models.DO_NOTHING)
+
+
+Company(BaseModel): table structure
+	- image = models.ImageField(upload_to="company")
+	- website = models.UrlField()
+	- location = models.TextField()
+
+
+Project(BaseModel): table structure
+	- image = models.ImageField(upload_to="project")
+	- location = models.TextField()
+	- company = models.ForeignKey("Company", related_name="company_project", on_delete=models.CASCADE)
+
+
+User(BaseModel): table structure
+	- first_name = models.CharField(max_length=128)
+	- last_name = models.Charfield(max_length=128)
+	- email = models.CharField(max_length=128, unique=True)
+	- #verified_at = models.DateTimeField(blank=True)
+	- role = models.ForeignKey(Role, related_name='user_role')
+
+
+Role(BaseRole): table structure
+	- permissions = models.ManyToMany(Permission, related_name="role_perm")
+	- company = models.ForeignKey(Company, related_name="company_role", on_delete=models.CASCADE)
+
+
+#UserProjectRole: table structure
+	- user = models.ForeignKey(User, related_name="upr_user", on_delete=models.CASCADE)
+	- project = models.ForeignKey(Project, related_name="upr_project", on_delet=models.CASCADE)
+	- role = models.ForeignKey(Role, related_name="upr_role", on_delete=models.CASCADE)
+
+
+LogModel: table structure
+	LOG_CHOICES = (
+		('created', 'Created'),
+		('updated', 'Updated'),
+		('deleted', 'Deleted'),
+	)
+	- category = models.CharField(max_length=10, choices=LOG_CHOICES, default='create')
+	- message = models.TextField()
+	- created_at = models.DateTimeField(auto_now_add=True)
+	- created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_%(model)s', on_delete=models.CASCADE)
+
+
+CompanyLog(LogModel): table structure
+	- pass
+
+
+ProjectLog(LogModel): table structure
+	- pass
+
+
+UserLog(LogModel): table structure
+	- pass
+
+
+RoleLog(LogModel): table structure
+	- pass
+

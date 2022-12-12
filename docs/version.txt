@@ -1,0 +1,4 @@
+Project Management Version1.0:
+	- Project management is applicable for any industry which need to keep track of their company, projects and user management.
+	- It has company details like their address, motive of work, what they do etc.
+	-
